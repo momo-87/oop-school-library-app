@@ -1,6 +1,6 @@
 require "./nameable"
 
-class Decorator < Nameable
+class BaseDecorator < Nameable
   def initialize(nameable)
     @nameable = nameable
   end
