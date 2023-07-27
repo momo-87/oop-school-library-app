@@ -11,11 +11,11 @@ class App
   end
 
   def list_all_books
-    @books.select {|book| puts "#{book.title} #{book.author}"}
+    @books.select {|book| puts "Title: \"#{book.title}\", Author: #{book.author}"}
   end
 
   def list_all_people
-    @people.select {|person| puts "#{person}"}
+    @people.select {|person| puts "[#{person.class}] Name: #{person.name}, ID: #{person.object_id}, Age: #{person.age}"}
   end
 
   def create_a_person
@@ -40,8 +40,6 @@ class App
       person = Teacher.new(age, ans, name)
       @people << person
     end
-
-    puts "Person created successfully"
   end
 
   def create_a_book
@@ -63,6 +61,3 @@ class App
 
 end
 
-app = App.new
-app.create_a_book
-app.list_all_books
