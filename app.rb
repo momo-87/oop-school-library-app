@@ -1,6 +1,7 @@
 require "./student.rb"
 require "./teacher.rb"
 require "./book.rb"
+require "./rental.rb"
 require 'date'
 
 class App
@@ -53,23 +54,38 @@ class App
   end
 
   def create_a_rental
+    rental = Rental.new
     puts "Select a book from the following list by number"
     @books.select {|book| puts "#{@books.index(book)}) Title: \"#{book.title}\", Author: #{book.author}"}
     ans = gets.chomp.to_i
     selected_book = @books[ans]
+    rental.book = selected_book
     puts " "
+
     puts "Select a person from the following list by number (not id)"
     @people.select {|person| puts "#{@people.index(person)}) [#{person.class}] Name: #{person.name}, ID: #{person.object_id}, Age: #{person.age}"}
     ans = gets.chomp.to_i
     selected_person = @people[ans]
+    rental.person = selected_person
     puts " "
+
     print "Date: "
     str_date = gets.chomp
     date = Date.parse(str_date)
+    rental.date = date
   end
 
   def list_all_rentals_for_a_person
-
+    print "ID of person: "
+    ans = gets.chomp.to_i
+    person = @people.filter {|person| person.object_id == ans}
+    if person.length == 0
+      puts "Rentals: "
+    else
+      rentals = person[0].rentals
+      puts "Rentals: "
+      rentals.select {|rental| puts "Date: #{rental.date}, Book \"#{rental.book.title}\" by #{rental.book.author}"}
+    end
   end
 
 end

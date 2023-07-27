@@ -16,7 +16,7 @@ class CreateNewApp
     option = gets.chomp
   
     if option == "7"
-      puts "Exit successfully"
+      puts "Thank you for using this app!"
     end
     
     if option == "1"
@@ -52,7 +52,11 @@ class CreateNewApp
       main
     end
 
-
+    if option == "6"
+      @@app.list_all_rentals_for_a_person
+      puts " "
+      main
+    end
 
   end
 end
