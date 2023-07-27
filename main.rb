@@ -45,6 +45,15 @@ class CreateNewApp
       main
     end
   
+    if option == "5"
+      @@app.create_a_rental
+      puts "Rental created successfully
+      "
+      main
+    end
+
+
+
   end
 end
 

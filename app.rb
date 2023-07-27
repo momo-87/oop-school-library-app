@@ -1,6 +1,7 @@
 require "./student.rb"
 require "./teacher.rb"
 require "./book.rb"
+require 'date'
 
 class App
   attr_reader :people
@@ -51,8 +52,20 @@ class App
     @books << book
   end
 
-  def create_rental
-
+  def create_a_rental
+    puts "Select a book from the following list by number"
+    @books.select {|book| puts "#{@books.index(book)}) Title: \"#{book.title}\", Author: #{book.author}"}
+    ans = gets.chomp.to_i
+    selected_book = @books[ans]
+    puts " "
+    puts "Select a person from the following list by number (not id)"
+    @people.select {|person| puts "#{@people.index(person)}) [#{person.class}] Name: #{person.name}, ID: #{person.object_id}, Age: #{person.age}"}
+    ans = gets.chomp.to_i
+    selected_person = @people[ans]
+    puts " "
+    print "Date: "
+    str_date = gets.chomp
+    date = Date.parse(str_date)
   end
 
   def list_all_rentals_for_a_person
