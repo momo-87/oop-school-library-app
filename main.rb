@@ -1,65 +1,62 @@
-require "./app.rb"
+require './app'
 
-class CreateNewApp
-  @@app = App.new
+class Start
+  def options
+    [
+      'List all books',
+      'List all people',
+      'Create a person',
+      'Create a book',
+      'Create a rental',
+      'List all rentals for a given person id',
+      'Exit'
+    ]
+  end
+
+  def display_menu
+    puts 'Please choose an option by entering a number:'
+    options.each_with_index { |option, i| puts "#{i + 1} - #{option}" }
+  end
+
+  def call_options
+    {
+      '1' => -> { @app.list_all_books },
+      '2' => -> { @app.list_all_people },
+      '3' => lambda {
+               @app.create_a_person
+               puts "Person created successfully\n"
+             },
+      '4' => lambda {
+               @app.create_a_book
+               puts "Book created successfully\n"
+             },
+      '5' => lambda {
+               @app.create_a_rental
+               puts "Rental created successfully\n"
+             },
+      '6' => -> { @app.list_all_rentals_for_a_person },
+      '7' => -> { puts 'Thank you for using this app!' }
+    }
+  end
 
   def main
-    text = "Please choose an option by entering a number:
-    1 - List all books
-    2 - list all people
-    3 - Create a person
-    4 - Create a book
-    5 - Create a rental
-    6 - list all rentals for a given person id
-    7 - exit"
-    puts text
-    option = gets.chomp
-  
-    if option == "7"
-      puts "Thank you for using this app!"
-    end
-    
-    if option == "1"
-      @@app.list_all_books
-      puts " "
-      main
-    end
+    @app = App.new
+    calls = call_options
 
-    if option == "2"
-      @@app.list_all_people
-      puts " "
-      main
-    end
-  
-    if option == "3"
-      @@app.create_a_person
-      puts "Person created successfully
-      "
-      main
-    end
-  
-    if option == "4"
-      @@app.create_a_book
-      puts "Book created successfully
-      "
-      main
-    end
-  
-    if option == "5"
-      @@app.create_a_rental
-      puts "Rental created successfully
-      "
-      main
-    end
+    loop do
+      display_menu
+      choice = gets.chomp
+      if calls[choice]
+        calls[choice].call
+        return if choice == '7'
+      else
+        puts 'Sorry, the provided option does not exist'
+      end
 
-    if option == "6"
-      @@app.list_all_rentals_for_a_person
-      puts " "
-      main
+      puts ' '
     end
-
   end
 end
 
-init = CreateNewApp.new
+init = Start.new
 init.main
