@@ -1,4 +1,4 @@
-require './start.rb'
+require './start'
 
 class Main
   def options
