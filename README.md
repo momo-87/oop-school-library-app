@@ -1,8 +1,6 @@
 <a name="readme-top"></a>
 
 <div align="center">
-  <!-- <img src="./photo.png" alt="photo" width="80"/>
-  <img src="./intro.png" alt="logo"/> -->
   <br/>  
   <h2><b>OOP School Library App</b></h2>
 </div>
