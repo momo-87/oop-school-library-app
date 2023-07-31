@@ -1,23 +1,22 @@
-require './app.rb'
+require './app'
 
 class Start
-  
   def call_options
     {
       '1' => -> { @app.list_all_books },
       '2' => -> { @app.list_all_people },
       '3' => lambda {
-              @app.create_a_person
-              puts "Person created successfully\n"
-            },
+               @app.create_a_person
+               puts "Person created successfully\n"
+             },
       '4' => lambda {
-              @app.create_a_book
-              puts "Book created successfully\n"
-            },
+               @app.create_a_book
+               puts "Book created successfully\n"
+             },
       '5' => lambda {
-              @app.create_a_rental
-              puts "Rental created successfully\n"
-            },
+               @app.create_a_rental
+               puts "Rental created successfully\n"
+             },
       '6' => -> { @app.list_all_rentals_for_a_person },
       '7' => -> { puts 'Thank you for using this app!' }
     }
