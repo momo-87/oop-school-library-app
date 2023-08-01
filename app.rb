@@ -14,7 +14,10 @@ class App
   end
 
   def list_all_books
-    @books.select { |book| puts "Title: \"#{book.title}\", Author: #{book.author}" }
+    stored_books = []
+    file_data = File.readlines("books.json")
+    file_data.each {|line| stored_books << JSON.parse(line)}
+    stored_books.select {|book| puts "Title: \"#{book["title"]}\", Author: #{book["author"]}"}
   end
 
   def list_all_people
@@ -59,6 +62,8 @@ class App
     author = gets.chomp
     book = Book.new(title, author)
     @books << book
+    book_hash = {title: book.title, author: book.author}
+    File.write("people.json", "#{ JSON.generate(book_hash) }", mode: "a")
   end
 
   def create_a_rental
