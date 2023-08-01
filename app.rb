@@ -14,17 +14,28 @@ class App
   end
 
   def list_all_books
-    @books.select { |book| puts "Title: \"#{book.title}\", Author: #{book.author}" }
+    stored_books = []
+    File.foreach("books.json") do |line|
+      next if line.strip.empty?
+      book = JSON.parse(line)
+      puts "[Title: #{book["title"]}, Author: #{book["author"]}"
+      stored_books << book
+    end
+    stored_books
+    # @books.select { |book| puts "Title: \"#{book.title}\", Author: #{book.author}" }
   end
 
   def list_all_people
     stored_people = []
-    file_data = File.read("people.json").split
-    file_data.each {|data| stored_people << JSON.parse(data)}
-    stored_people.select do |person|
-    puts "[#{person["class"]}] Name: #{person["name"]}, ID: #{person["ID"]}, Age: #{person["age"]}"
+    File.foreach("people.json") do |line|
+      next if line.strip.empty?
+      person = JSON.parse(line)
+      puts "[#{person["class"]}] Name: #{person["name"]}, ID: #{person["ID"]}, Age: #{person["age"]}"
+      stored_people << person
     end
+    stored_people
   end
+  
 
   def create_a_person
     print 'Do you want to create a student (1) or a teacher (2)? [Input the number]: '
@@ -42,15 +53,15 @@ class App
       ans = gets.chomp
       person.parent_permission = false if ans == 'N'
       @people << person
-      person_hash = { class: person.class, name: person.name, ID: person.object_id, age: person.age }
-      File.write("people.json", "#{ JSON.generate(person_hash) }\n", mode: "a")
-    elsif num == '2'
+     person_hash = { class: person.class, name: person.name, ID: person.object_id, age: person.age }
+    File.write("people.json", "#{JSON.generate(person_hash)}\n", mode: "a")
+  elsif num == '2'
       print 'specialization: '
       ans = gets.chomp
       person = Teacher.new(age, ans, name)
       @people << person
       person_hash = { class: person.class, name: person.name, ID: person.object_id, age: person.age }
-      File.write("people.json", "#{ JSON.generate(person_hash) }\n", mode: "a")
+      File.write("people.json", "#{JSON.generate(person_hash)}\n", mode: "a")
     end
   end
 
@@ -61,6 +72,8 @@ class App
     author = gets.chomp
     book = Book.new(title, author)
     @books << book
+    book_hash = { title: book.title, author: book.author }
+    File.write("books.json", "#{JSON.generate(book_hash)}\n", mode: "a")
   end
 
   def create_a_rental
