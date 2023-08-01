@@ -43,13 +43,10 @@ class App
   def create_a_person
     print 'Do you want to create a student (1) or a teacher (2)? [Input the number]: '
     num = gets.chomp
-
     print 'Age: '
     age = gets.chomp
-
     print 'Name: '
     name = gets.chomp
-
     if num == '1'
       person = Student.new(age, nil, name)
       print 'Has parent permission? [Y/N]: '
@@ -166,7 +163,7 @@ class Rental
     @date = date
   end
 
-  def to_json
+  def to_json(*_args)
     { person_id: @person.object_id, book_title: @book.title, book_author: @book.author, date: @date.to_s }.to_json
   end
 
