@@ -3,6 +3,7 @@ require './teacher'
 require './book'
 require './rental'
 require 'date'
+require 'json'
 
 class App
   attr_reader :people
@@ -17,8 +18,11 @@ class App
   end
 
   def list_all_people
-    @people.select do |person|
-      puts "[#{person.class}] Name: #{person.name}, ID: #{person.object_id}, Age: #{person.age}"
+    stored_people = []
+    file_data = File.read("people.json").split
+    file_data.each {|data| stored_people << JSON.parse(data)}
+    stored_people.select do |person|
+    puts "[#{person["class"]}] Name: #{person["name"]}, ID: #{person["ID"]}, Age: #{person["age"]}"
     end
   end
 
@@ -38,11 +42,15 @@ class App
       ans = gets.chomp
       person.parent_permission = false if ans == 'N'
       @people << person
+      person_hash = { class: person.class, name: person.name, ID: person.object_id, age: person.age }
+      File.write("people.json", "#{ JSON.generate(person_hash) }\n", mode: "a")
     elsif num == '2'
       print 'specialization: '
       ans = gets.chomp
       person = Teacher.new(age, ans, name)
       @people << person
+      person_hash = { class: person.class, name: person.name, ID: person.object_id, age: person.age }
+      File.write("people.json", "#{ JSON.generate(person_hash) }\n", mode: "a")
     end
   end
 
