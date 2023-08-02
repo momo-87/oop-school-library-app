@@ -22,5 +22,4 @@ RSpec.describe Book do
       expect(book.rentals).to include(rental)
     end
   end
-
 end
