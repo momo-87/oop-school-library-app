@@ -19,5 +19,4 @@ class Book
       rentals: @rentals
     }.to_json(*args)
   end
-
 end

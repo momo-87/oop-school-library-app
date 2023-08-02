@@ -19,7 +19,6 @@ class Teacher < Person
       parent_permission: @parent_permission,
       rentals: @rentals,
       specialization: @specialization
-  }.to_json(*args)
+    }.to_json(*args)
   end
-
 end

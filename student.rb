@@ -27,7 +27,6 @@ class Student < Person
       parent_permission: @parent_permission,
       rentals: @rentals,
       classroom: @classroom
-  }.to_json(*args)
+    }.to_json(*args)
   end
-
 end

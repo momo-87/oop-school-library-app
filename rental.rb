@@ -17,7 +17,7 @@ class Rental
   end
 
   def to_json(*args)
-    { 
+    {
       person_id: @person.id,
       book_title: @book.title,
       book_author: @book.author,
