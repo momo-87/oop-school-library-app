@@ -41,7 +41,6 @@ RSpec.describe Student do
     end
   end
 
-
   describe '#to_json' do
     it 'returns a JSON representation of the student' do
       json_data = student.to_json

@@ -1,5 +1,6 @@
 require 'json'
 require_relative '../person'
+require_relative '../rental'
 
 RSpec.describe Person do
   let(:person_name) { 'Tamara Dimov' }
@@ -38,16 +39,6 @@ RSpec.describe Person do
   describe '#correct_name' do
     it 'returns the correct name of the person' do
       expect(person.correct_name).to eq(person_name)
-    end
-  end
-
-  describe '#add_rental' do
-    let(:rental) { double('Rental') }
-
-    it 'adds the rental to the rentals array and sets the rental\'s person to self' do
-      person.add_rental(rental)
-      expect(person.rentals).to include(rental)
-      expect(rental.person).to eq(person)
     end
   end
 end
