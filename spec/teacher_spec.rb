@@ -16,4 +16,24 @@ RSpec.describe Teacher do
       expect(teacher.specialization).to eq(specialization)
     end
   end
+
+  describe '#can_use_services?' do
+    it 'give us boolean value (true or false) if the teacher is using servicies' do
+      expect(teacher.can_use_services?).to be true
+    end
+  end
+
+  describe '#to_json' do
+    it 'returns a JSON representation of the teacher' do
+      json_data = teacher.to_json
+      parsed_json = JSON.parse(json_data)
+      expect(parsed_json['class']).to eq(teacher.class.to_s)
+      expect(parsed_json['id']).to eq(teacher.instance_variable_get(:@id))
+      expect(parsed_json['name']).to eq(teacher_name)
+      expect(parsed_json['age']).to eq(teacher_age)
+      expect(parsed_json['parent_permission']).to eq(teacher.instance_variable_get(:@parent_permission))
+      expect(parsed_json['rentals']).to eq(teacher.instance_variable_get(:@rentals))
+      expect(parsed_json['specialization']).to eq(specialization)
+    end
+  end
 end

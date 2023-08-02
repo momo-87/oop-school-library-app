@@ -22,4 +22,14 @@ RSpec.describe Book do
       expect(book.rentals).to include(rental)
     end
   end
+
+  describe '#to_json' do
+    it 'returns a JSON representation of the book' do
+      json_data = book.to_json
+      parsed_json = JSON.parse(json_data)
+      expect(parsed_json['title']).to eq(book_title)
+      expect(parsed_json['author']).to eq(book_author)
+      expect(parsed_json['rentals']).to eq(book.instance_variable_get(:@rentals))
+    end
+  end
 end
