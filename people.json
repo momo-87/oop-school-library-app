@@ -1,0 +1,1 @@
+[{"class":"Student","id":250,"name":"Amiel","age":15,"parent_permission":false,"rentals":[],"classroom":null},{"class":"Teacher","id":754,"name":"Momo","age":35,"parent_permission":true,"rentals":[],"specialization":"Maths"}]
