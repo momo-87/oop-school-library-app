@@ -11,6 +11,7 @@ class App
   def initialize
     @people = []
     @books = []
+    @rental = Rental.new
     if File.exist?("people.json") && !File.zero?("people.json")
       @stored_people = JSON.parse(File.read("people.json"))
     else
@@ -21,6 +22,13 @@ class App
     else
       @stored_books = []
     end
+
+    if File.exist?("rentals.json") && !File.zero?("rentals.json")
+      @stored_rentals = JSON.parse(File.read("rentals.json"))
+    else
+      @stored_rentals = []
+    end
+
   end
 
   def list_all_books
@@ -76,48 +84,80 @@ class App
   end
 
   def create_a_rental
-    rental = Rental.new
-
     puts 'Select a book from the following list by number'
-    @books.each_with_index { |book, i| puts "#{i}) Title: \"#{book.title}\", Author: #{book.author}" }
-    rental.book = @books[gets.chomp.to_i]
+    available_books = @stored_books + @books
+    available_books.each_with_index do |book, i|
+      puts "#{i}) Title: \"#{book["title"]}\", Author: #{book["author"]}" if book.class == Hash
+      puts "#{i}) Title: \"#{book.title}\", Author: #{book.author}" if book.class == Book
+    end
+    selected_book = available_books[gets.chomp.to_i]
+
+    if selected_book.class == Book
+      @rental.book = selected_book
+    else 
+      @rental.book = Book.new(selected_book["title"], selected_book["author"])
+    end
     puts ' '
 
     puts 'Select a person from the following list by number (not id)'
-    @people.each_with_index do |person, i|
-      puts "#{i}) [#{person.class}]\
-    Name: #{person.name},\
-    ID: #{person.object_id},\
-    Age: #{person.age}"
+    available_people = @stored_people + @people
+    available_people.each_with_index do |person, i|
+      if person.class == Student || person.class == Teacher
+        puts "#{i}) [#{person.class}]\
+        Name: #{person.name},\
+        ID: #{person.id},\
+        Age: #{person.age}"
+      else
+        puts "#{i}) [#{person["class"]}]\
+        Name: #{person["name"]},\
+        ID: #{person["id"]},\
+        Age: #{person["age"]}"
+      end
     end
-    rental.person = @people[gets.chomp.to_i]
+    selected_person = available_people[gets.chomp.to_i]
+    if selected_person.class == Teacher || selected_person.class == Student
+      @rental.person = selected_person
+    elsif selected_person["class"] == "Student"
+      @rental.person = Student.new(selected_person["age"], nil, selected_person["name"])
+    else
+      @rental.person = Teacher.new(selected_person["age"], selected_person["specialization"], selected_person["name"])
+    end
     puts ' '
 
     print 'Date: '
-    rental.date = Date.parse(gets.chomp)
-    rental
+    @rental.date = Date.parse(gets.chomp)
+    @stored_rentals << @rental
   end
 
   def list_all_rentals_for_a_person
     print 'ID of person: '
     ans = gets.chomp.to_i
-    target_person = @people.filter { |person| person.object_id == ans }
-    if target_person.empty?
+    selected_rentals = []
+     @stored_rentals.each do |rental|
+      selected_rentals << rental if rental.class == Hash && rental["person_id"] == ans
+      selected_rentals << rental if rental.class == Rental && rental.person.id == ans
+    end
+
+    if selected_rentals.empty?
       puts 'Rentals: '
     else
-      rentals = target_person[0].rentals
       puts 'Rentals: '
-      rentals.select { |rental| puts "Date: #{rental.date}, Book \"#{rental.book.title}\" by #{rental.book.author}" }
+      selected_rentals.select do |rental| 
+        puts "Date: #{rental.date}, Book \"#{rental.book.title}\" by #{rental.book.author}" if rental.class == Rental
+        puts "Date: #{rental["date"]}, Book \"#{rental["book_title"]}\" by #{rental["book_author"]}" if rental.class == Hash
+      end
     end
   end
 
   def preserve_data
     @stored_people += @people
-    File.write("people.json", "#{JSON.generate(@stored_people)}\n")
+    File.write("people.json", "#{JSON.generate(@stored_people)}")
 
     @stored_books += @books
-    File.write("books.json", "#{JSON.generate(@stored_books)}\n")
-  end
+    File.write("books.json", "#{JSON.generate(@stored_books)}")
 
+    File.write("rentals.json", "#{JSON.generate(@stored_rentals)}")
+    puts 'Thank you for using this app!'
+  end
 
 end

@@ -16,9 +16,14 @@ class Rental
     book.rentals << self unless book.rentals.include?(self)
   end
 
-  # def to_json(*_args)
-  #   { person_id: @person.object_id, book_title: @book.title, book_author: @book.author, date: @date.to_s }.to_json
-  # end
+  def to_json(*args)
+    { 
+      person_id: @person.id,
+      book_title: @book.title,
+      book_author: @book.author,
+      date: @date
+    }.to_json(*args)
+  end
 
   # def self.from_json(json)
   #   data = JSON.parse(json)
