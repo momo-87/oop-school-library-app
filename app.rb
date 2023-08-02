@@ -16,15 +16,29 @@ class App
     else
       @stored_people = []
     end
+    if File.exist?("books.json") && !File.zero?("books.json")
+      @stored_books = JSON.parse(File.read("books.json"))
+    else
+      @stored_books = []
+    end
   end
 
   def list_all_books
-    @books.select { |book| puts "Title: \"#{book.title}\", Author: #{book.author}" }
+    available_books = @stored_books + @books
+    available_books.select do |book|
+      puts "Title: \"#{book["title"]}\", Author: #{book["author"]}" if book.class == Hash
+      puts "Title: \"#{book.title}\", Author: #{book.author}" if book.class == Book
+    end
   end
 
   def list_all_people
-    @people.select do |person|
-      puts "[#{person.class}] Name: #{person.name}, ID: #{person.object_id}, Age: #{person.age}"
+    available_people = @stored_people + @people
+    available_people.select do |person|
+      if person.class == Student || person.class == Teacher
+        puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+      else
+        puts "[#{person["class"]}] Name: #{person["name"]}, ID: #{person["id"]}, Age: #{person["age"]}"
+      end
     end
   end
 
@@ -100,6 +114,9 @@ class App
   def preserve_data
     @stored_people += @people
     File.write("people.json", "#{JSON.generate(@stored_people)}\n")
+
+    @stored_books += @books
+    File.write("books.json", "#{JSON.generate(@stored_books)}\n")
   end
 
 
