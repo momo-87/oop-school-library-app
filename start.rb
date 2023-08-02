@@ -18,7 +18,7 @@ class Start
                puts "Rental created successfully\n"
              },
       '6' => -> { @app.list_all_rentals_for_a_person },
-      '7' => -> { puts 'Thank you for using this app!' }
+      '7' => -> { @app.preserve_data }
     }
   end
 

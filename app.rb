@@ -11,47 +11,44 @@ class App
   def initialize
     @people = []
     @books = []
+    if File.exist?("people.json") && !File.zero?("people.json")
+      @stored_people = JSON.parse(File.read("people.json"))
+    else
+      @stored_people = []
+    end
   end
 
   def list_all_books
-    stored_books = []
-    file_data = File.readlines("books.json")
-    file_data.each {|line| stored_books << JSON.parse(line)}
-    stored_books.select {|book| puts "Title: \"#{book["title"]}\", Author: #{book["author"]}"}
+    @books.select { |book| puts "Title: \"#{book.title}\", Author: #{book.author}" }
   end
 
   def list_all_people
-    stored_people = []
-    file_data = File.readlines("people.json")
-    file_data.each {|line| stored_people << JSON.parse(line)}
-    stored_people.select do |person|
-      puts "[#{person["class"]}] Name: #{person["name"]}, ID: #{person["ID"]}, Age: #{person["age"]}"
+    @people.select do |person|
+      puts "[#{person.class}] Name: #{person.name}, ID: #{person.object_id}, Age: #{person.age}"
     end
-
   end
 
   def create_a_person
     print 'Do you want to create a student (1) or a teacher (2)? [Input the number]: '
     num = gets.chomp
+
     print 'Age: '
     age = gets.chomp.to_i
+
     print 'Name: '
     name = gets.chomp
+
     if num == '1'
       person = Student.new(age, nil, name)
       print 'Has parent permission? [Y/N]: '
       ans = gets.chomp
       person.parent_permission = false if ans == 'N'
       @people << person
-      person_hash = { class: person.class, name: person.name, ID: person.object_id, age: person.age }
-      File.write("people.json", "#{ JSON.generate(person_hash) }\n", mode: "a")
     elsif num == '2'
       print 'specialization: '
       ans = gets.chomp
       person = Teacher.new(age, ans, name)
       @people << person
-      person_hash = { class: person.class, name: person.name, ID: person.object_id, age: person.age }
-      File.write("people.json", "#{ JSON.generate(person_hash) }", mode: "a")
     end
   end
 
@@ -62,27 +59,26 @@ class App
     author = gets.chomp
     book = Book.new(title, author)
     @books << book
-    book_hash = {title: book.title, author: book.author}
-    File.write("people.json", "#{ JSON.generate(book_hash) }", mode: "a")
   end
 
   def create_a_rental
     rental = Rental.new
+
     puts 'Select a book from the following list by number'
     @books.each_with_index { |book, i| puts "#{i}) Title: \"#{book.title}\", Author: #{book.author}" }
     rental.book = @books[gets.chomp.to_i]
     puts ' '
-    puts 'Select a person from the following list by number (not id)'
 
+    puts 'Select a person from the following list by number (not id)'
     @people.each_with_index do |person, i|
       puts "#{i}) [#{person.class}]\
-      Name: #{person.name},\
-      ID: #{person.object_id},\
-      Age: #{person.age}"
+    Name: #{person.name},\
+    ID: #{person.object_id},\
+    Age: #{person.age}"
     end
-
     rental.person = @people[gets.chomp.to_i]
     puts ' '
+
     print 'Date: '
     rental.date = Date.parse(gets.chomp)
     rental
@@ -100,4 +96,11 @@ class App
       rentals.select { |rental| puts "Date: #{rental.date}, Book \"#{rental.book.title}\" by #{rental.book.author}" }
     end
   end
+
+  def preserve_data
+    @stored_people += @people
+    File.write("people.json", "#{JSON.generate(@stored_people)}\n")
+  end
+
+
 end
