@@ -6,7 +6,7 @@ RSpec.describe Person do
   let(:person_name) { 'Tamara Dimov' }
   let(:person_age) { 32 }
   let(:parent_permission) { true }
-  let(:person) { Person.new(person_age, person_name, parent_permission:) }
+  let(:person) { Person.new(person_age, person_name, parent_permission: true) }
 
   describe '#initialize' do
     it 'creates a person with given id, name, age, parent permission, and an empty rentals array' do
