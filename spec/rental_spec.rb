@@ -1,4 +1,4 @@
-require_relative '../rental.rb'
+require_relative '../rental'
 require 'json'
 
 RSpec.describe Rental do

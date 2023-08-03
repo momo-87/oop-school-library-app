@@ -24,5 +24,4 @@ class Rental
       date: @date
     }.to_json(*args)
   end
-  
 end
